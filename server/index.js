@@ -7,10 +7,10 @@ const app = express()
 const PORT = 3000
 
 app.use(express.static(path.join(__dirname, '..', 'dist')))
-app.use(express.static('public'))
+// app.use(express.static('public'))
 
 app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
+  res.sendFile(path.join(__dirname, '..', 'public', 'server.html'))
 })
 
 const server = app.listen(PORT, () => {

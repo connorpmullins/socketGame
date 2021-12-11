@@ -3,10 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "rm dist/bundle.js && webpack --mode development --config-name server && node server/index.js",
-    "startWeb": "npm run buildWebDev && webpack-dev-server --mode development",
-    "buildWebDev": "webpack --mode development --config-name client",
-    "buildWebProd": "webpack --mode production --config-name client"
+    "start": "npm run buildForServer && node server/index.js",
+    "startWeb": "npm run buildDev && webpack-dev-server --mode development",
+    "buildDev": "webpack --mode development --config-name client",
+    "buildProd": "webpack --mode production --config-name client",
+    "buildForServer": "rm dist/bundle.js && webpack --mode development --config-name server"
   },
   "husky": {
     "hooks": {}
