@@ -38,6 +38,6 @@ const io = new Server(server)
 
 // Listen for Socket.IO Connections. Once connected, start the game logic.
 io.sockets.on('connection', (socket) => {
-  // console.log('client connected')
+  console.log('client connected')
   agx.initGame(io, socket, db)
 })

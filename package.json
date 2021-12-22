@@ -15,7 +15,6 @@
     "sqlite3": "5.0.2"
   },
   "devDependencies": {
-    "husky": "^7.0.4",
-    "standard": "^16.0.4"
+    "husky": "^7.0.4"
   }
 }

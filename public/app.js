@@ -1,5 +1,6 @@
-jQuery(function($){
-    'use strict';
+console.log('connor - app.js')
+$(document).ready(function () {
+    'use strict'
 
     /**
      * All the code relevant to Socket.IO is collected in the IO namespace.
@@ -12,7 +13,8 @@ jQuery(function($){
          * This is called when the page is displayed. It connects the Socket.IO client
          * to the Socket.IO server
          */
-        init: function() {
+        init: function () {
+            console.log('init io')
             IO.socket = io.connect();
             IO.bindEvents();
         },
@@ -36,9 +38,10 @@ jQuery(function($){
         /**
          * The client is successfully connected!
          */
-        onConnected : function() {
+        onConnected: function () {
+            console.log('onConnected', IO.socket)
             // Cache a copy of the client's socket.IO session ID on the App
-            App.mySocketId = IO.socket.socket.sessionid;
+            App.mySocketId = IO.socket.id;
             // console.log(data.message);
         },
 
@@ -164,6 +167,7 @@ jQuery(function($){
          * This runs when the page initially loads.
          */
         init: function () {
+            console.log('init app')
             App.cacheElements();
             App.showInitScreen();
             App.bindEvents();
@@ -257,7 +261,7 @@ jQuery(function($){
              * Handler for the "Start" button on the Title Screen.
              */
             onCreateClick: function () {
-                // console.log('Clicked "Create A Game"');
+                console.log('Clicked "Create A Game"');
                 IO.socket.emit('hostCreateNewGame');
             },
 
@@ -663,4 +667,4 @@ jQuery(function($){
     IO.init();
     App.init();
 
-}($));
+})
