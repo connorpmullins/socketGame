@@ -2,11 +2,6 @@ console.log('connor - app.js')
 $(document).ready(function () {
     'use strict'
 
-    /**
-     * All the code relevant to Socket.IO is collected in the IO namespace.
-     *
-     * @type {{init: Function, bindEvents: Function, onConnected: Function, onNewGameCreated: Function, playerJoinedRoom: Function, beginNewGame: Function, onNewWordData: Function, hostCheckAnswer: Function, gameOver: Function, error: Function}}
-     */
     var IO = {
 
         /**
@@ -15,7 +10,7 @@ $(document).ready(function () {
          */
         init: function () {
             console.log('init io')
-            IO.socket = io.connect();
+            IO.socket = io();
             IO.bindEvents();
         },
 
@@ -42,7 +37,6 @@ $(document).ready(function () {
             console.log('onConnected', IO.socket)
             // Cache a copy of the client's socket.IO session ID on the App
             App.mySocketId = IO.socket.id;
-            // console.log(data.message);
         },
 
         //function for showing leader
@@ -66,7 +60,8 @@ $(document).ready(function () {
          * A new game has been created and a random game ID has been generated.
          * @param data {{ gameId: int, mySocketId: * }}
          */
-        onNewGameCreated : function(data) {
+        onNewGameCreated: function (data) {
+            console.log('io onNewGameCreated')
             App.Host.gameInit(data);
         },
 
@@ -74,7 +69,8 @@ $(document).ready(function () {
          * A player has successfully joined the game.
          * @param data {{playerName: string, gameId: int, mySocketId: int}}
          */
-        playerJoinedRoom : function(data) {
+        playerJoinedRoom: function (data) {
+            console.log('player joined room!')
             // When a player joins a room, do the updateWaitingScreen funciton.
             // There are two versions of this function: one for the 'host' and
             // another for the 'player'.
@@ -276,7 +272,7 @@ $(document).ready(function () {
                 App.Host.numPlayersInRoom = 0;
 
                 App.Host.displayNewGameScreen();
-                // console.log("Game started with ID: " + App.gameId + ' by host: ' + App.mySocketId);
+                console.log("Game started with ID: " + App.gameId + ' by host: ' + App.mySocketId);
             },
 
             /**
@@ -316,7 +312,7 @@ $(document).ready(function () {
 
                 // If two players have joined, start the game!
                 if (App.Host.numPlayersInRoom === 2) {
-                    // console.log('Room is full. Almost ready!');
+                    console.log('Room is full. Almost ready!');
 
                     // Let the server know that two players are present.
                     IO.socket.emit('hostRoomFull',App.gameId);
@@ -475,7 +471,7 @@ $(document).ready(function () {
              * Click handler for the 'JOIN' button
              */
             onJoinClick: function () {
-                // console.log('Clicked "Join A Game"');
+                console.log('Clicked "Join A Game"');
 
                 // Display the Join Game HTML on the player's screen.
                 App.$gameArea.html(App.$templateJoinGame);
@@ -486,7 +482,7 @@ $(document).ready(function () {
              * and clicked Start.
              */
             onPlayerStartClick: function() {
-                // console.log('Player clicked "Start"');
+                console.log('Player clicked "Start"');
 
                 // collect data to send to the server
                 var data = {
@@ -506,7 +502,7 @@ $(document).ready(function () {
              *  Click handler for the Player hitting a word in the word list.
              */
             onPlayerAnswerClick: function() {
-                // console.log('Clicked Answer Button');
+                console.log('Clicked Answer Button');
                 var $btn = $(this);      // the tapped button
                 var answer = $btn.val(); // The tapped word
 
@@ -620,7 +616,7 @@ $(document).ready(function () {
             $el.text(startTime);
             App.doTextFit('#hostWord');
 
-            // console.log('Starting Countdown...');
+            console.log('Starting Countdown...');
 
             // Start a 1 second timer
             var timer = setInterval(countItDown,1000);
@@ -632,7 +628,7 @@ $(document).ready(function () {
                 App.doTextFit('#hostWord');
 
                 if( startTime <= 0 ){
-                    // console.log('Countdown Finished.');
+                    console.log('Countdown Finished.');
 
                     // Stop the timer and do the callback.
                     clearInterval(timer);

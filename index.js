@@ -4,25 +4,14 @@ const logger = require('morgan')
 const path = require('path') // Import the 'path' module (packaged with Node.js)
 const fs = require('fs') // Import the fs
 const { Server } = require('socket.io')
+const sqlite3 = require('sqlite3').verbose()
 
 const agx = require('./agxgame') // Import the Anagrammatix game file.
 
 /** Database Code **/
-const file = 'mydb.db'
-const exists = fs.existsSync(file)
-
-if (!exists) {
-  console.log('Creating DB file.')
-  fs.openSync(file, 'w')
-}
-
-const sqlite3 = require('sqlite3').verbose()
-const db = new sqlite3.Database(file)
-
+const db = new sqlite3.Database(':memory:')
 db.serialize(function () {
-  if (!exists) {
     db.run('CREATE TABLE player (player_name TEXT, player_win INT)')
-  }
 })
 
 /** Server Code **/

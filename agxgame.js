@@ -11,7 +11,6 @@ exports.initGame = function (sio, socket, sdb) {
     console.log('init game')
     io = sio;
     gameSocket = socket;
-    // console.log('game socket: ', gameSocket)
     db=sdb;
     gameSocket.emit('connected', { message: "You are connected!" });
 
@@ -40,6 +39,7 @@ exports.initGame = function (sio, socket, sdb) {
  * The 'START' button was clicked and 'hostCreateNewGame' event occurred.
  */
 function hostCreateNewGame() {
+    console.log('game : hostCreateNewGame')
     // Create a unique Socket.IO Room
     var thisGameId = ( Math.random() * 100000 ) | 0;
 
@@ -58,9 +58,9 @@ function hostPrepareGame(gameId) {
     var sock = this;
     var data = {
         mySocketId : sock.id,
-        gameId : gameId
+        gameId : gameId.toString()
     };
-    //console.log("All Players Present. Preparing game...");
+    console.log("All Players Present. Preparing game...");
     io.sockets.in(data.gameId).emit('beginNewGame', data);
 }
 
@@ -141,21 +141,29 @@ function findLeader()
  * @param data Contains data entered via player's input - playerName and gameId.
  */
 function playerJoinGame(data) {
-    //console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
-
+    console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
     // A reference to the player's Socket.IO socket object
     var sock = this;
-
+    const gameId = data.gameId.toString()
+    
     // Look up the room ID in the Socket.IO manager object.
-    var room = gameSocket.manager.rooms["/" + data.gameId];
+    var room = gameSocket.adapter.rooms.get(gameId);
+    
+    console.log({ id: gameId, room })
 
     // If the room exists...
-    if( room != undefined ){
+    if (room != undefined) {
         // attach the socket id to the data object.
         data.mySocketId = sock.id;
+        
+        console.log('Room defined, data: ', data)
 
         // Join the room
-        sock.join(data.gameId);
+        sock.join(gameId);
+
+        console.log({ sock: sock.join })
+        
+        
         db.serialize(function()
             {
                 var stmt = " SELECT * FROM player WHERE player_name='"+data.playerName+"';";
@@ -168,10 +176,10 @@ function playerJoinGame(data) {
                     }
                 });
             });
-        //console.log('Player ' + data.playerName + ' joining game: ' + data.gameId );
+        console.log('Player ' + data.playerName + ' joining game: ' + gameId );
 
         // Emit an event notifying the clients that the player has joined the room.
-        io.sockets.in(data.gameId).emit('playerJoinedRoom', data);
+        io.to(gameId).emit('playerJoinedRoom', data);
 
     } else {
         // Otherwise, send an error message back to the player.
@@ -184,7 +192,7 @@ function playerJoinGame(data) {
  * @param data gameId
  */
 function playerAnswer(data) {
-    // console.log('Player ID: ' + data.playerId + ' answered a question with: ' + data.answer);
+    console.log('Player ID: ' + data.playerId + ' answered a question with: ' + data.answer);
 
     // The player's answer is attached to the data object.  \
     // Emit an event with the answer so it can be checked by the 'Host'
@@ -196,7 +204,7 @@ function playerAnswer(data) {
  * @param data
  */
 function playerRestart(data) {
-    // console.log('Player: ' + data.playerName + ' ready for new game.');
+    console.log('Player: ' + data.playerName + ' ready for new game.');
 
     // Emit the player's data back to the clients in the game room.
     data.playerId = this.id;
