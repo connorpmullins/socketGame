@@ -3,20 +3,13 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "npm run buildForServer && node server/index.js",
-    "startWeb": "npm run buildDev && webpack-dev-server --mode development",
-    "buildDev": "webpack --mode development --config-name client",
-    "buildProd": "webpack --mode production --config-name client",
-    "buildForServer": "rm dist/bundle.js && webpack --mode development --config-name server"
+    "start": "node index.js"
   },
   "husky": {
     "hooks": {}
   },
   "dependencies": {
     "express": "^4.17.1",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-hot-loader": "^4.3.11",
     "socket.io": "^4.4.0"
   },
   "devDependencies": {
@@ -28,10 +21,6 @@
     "css-loader": "^1.0.0",
     "husky": "^7.0.4",
     "standard": "^16.0.4",
-    "style-loader": "^0.23.0",
-    "webpack": "^4.19.1",
-    "webpack-cli": "^3.1.1",
-    "webpack-dev-server": "^3.1.8",
-    "webpack-node-externals": "^3.0.0"
+    "style-loader": "^0.23.0"
   }
 }
