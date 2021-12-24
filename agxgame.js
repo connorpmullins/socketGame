@@ -41,13 +41,13 @@ exports.initGame = function (sio, socket, sdb) {
 function hostCreateNewGame() {
     console.log('game : hostCreateNewGame')
     // Create a unique Socket.IO Room
-    var thisGameId = ( Math.random() * 100000 ) | 0;
+    var thisGameId = (( Math.random() * 100000 ) | 0).toString();
 
     // Return the Room ID (gameId) and the socket ID (mySocketId) to the browser client
     this.emit('newGameCreated', {gameId: thisGameId, mySocketId: this.id});
 
     // Join the Room and wait for the players
-    this.join(thisGameId.toString());
+    this.join(thisGameId);
 };
 
 /*
@@ -58,7 +58,7 @@ function hostPrepareGame(gameId) {
     var sock = this;
     var data = {
         mySocketId : sock.id,
-        gameId : gameId.toString()
+        gameId : gameId
     };
     console.log("All Players Present. Preparing game...");
     io.sockets.in(data.gameId).emit('beginNewGame', data);
@@ -177,7 +177,7 @@ function playerJoinGame(data) {
                 });
             });
         console.log('Player ' + data.playerName + ' joining game: ' + gameId );
-
+        console.log('player joining room. Data: ', data)
         // Emit an event notifying the clients that the player has joined the room.
         io.to(gameId).emit('playerJoinedRoom', data);
 
@@ -193,10 +193,10 @@ function playerJoinGame(data) {
  */
 function playerAnswer(data) {
     console.log('Player ID: ' + data.playerId + ' answered a question with: ' + data.answer);
-
+    console.log('data: ', data)
     // The player's answer is attached to the data object.  \
     // Emit an event with the answer so it can be checked by the 'Host'
-    io.sockets.in(data.gameId).emit('hostCheckAnswer', data);
+    io.sockets.in(data.gameId.toString()).emit('hostCheckAnswer', data);
 }
 
 /**
@@ -225,7 +225,7 @@ function playerRestart(data) {
  */
 function sendWord(wordPoolIndex, gameId) {
     var data = getWordData(wordPoolIndex);
-    io.sockets.in(data.gameId).emit('newWordData', data);
+    io.sockets.in(gameId).emit('newWordData', data);
 }
 
 /**

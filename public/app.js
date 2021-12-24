@@ -70,7 +70,7 @@ $(document).ready(function () {
          * @param data {{playerName: string, gameId: int, mySocketId: int}}
          */
         playerJoinedRoom: function (data) {
-            console.log('player joined room!')
+            console.log('player joined room!', data, App)
             // When a player joins a room, do the updateWaitingScreen funciton.
             // There are two versions of this function: one for the 'host' and
             // another for the 'player'.
@@ -104,7 +104,8 @@ $(document).ready(function () {
          * A player answered. If this is the host, check the answer.
          * @param data
          */
-        hostCheckAnswer : function(data) {
+        hostCheckAnswer: function (data) {
+            console.log('hostCheckAnswer hit - App.myRole? ', App.myRole)
             if(App.myRole === 'Host') {
                 App.Host.checkAnswer(data);
             }
@@ -366,7 +367,8 @@ $(document).ready(function () {
              * Check the answer clicked by a player.
              * @param data{{round: *, playerId: *, answer: *, gameId: *}}
              */
-            checkAnswer : function(data) {
+            checkAnswer: function (data) {
+                console.log('Checking answer....')
                 // Verify that the answer clicked is from the current round.
                 // This prevents a 'late entry' from a player whos screen has not
                 // yet updated to the current round.
@@ -535,8 +537,10 @@ $(document).ready(function () {
              * Display the waiting screen for player 1
              * @param data
              */
-            updateWaitingScreen : function(data) {
-                if(IO.socket.socket.sessionid === data.mySocketId){
+            updateWaitingScreen: function (data) {
+                console.log('CONNOR - new updateWS call data: ', data)
+                console.log('IO.socket: ', IO.socket)
+                if(IO.socket.id === data.mySocketId){
                     App.myRole = 'Player';
                     App.gameId = data.gameId;
 
